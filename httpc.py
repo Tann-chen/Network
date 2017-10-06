@@ -85,11 +85,11 @@ class Httpc (cmd.Cmd):
                         headers[header[0]] = header[1]
                     h_index+=1
 
-            if '-d' and (not '-f')in args:
+            if '-d' in args:
                 d_index = args.index('-d')
                 data = args[d_index+1]
 
-            if '-f' and (not '-d')in args:
+            if '-f' in args:
                 f_index = args.index('-f')
                 file_path = args[f_index+1]
 
