@@ -68,7 +68,8 @@ class Httpc (cmd.Cmd):
         file_path=''
 
         if '-d' and '-f' in args:
-            sys.stdout.write('illegal')
+            # sys.stdout.write('illegal')
+            print('illegal')
         else:
             if '-v' in args:
                 is_v = True
