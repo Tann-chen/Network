@@ -1,5 +1,4 @@
 import cmd
-import sys
 from httplib.httplib import get
 from httplib.httplib import post
 
@@ -67,34 +66,30 @@ class Httpc (cmd.Cmd):
         data=''
         file_path=''
 
-        if '-d' in args and '-f' in args:
-            # sys.stdout.write('illegal')
-            print('illegal')
-        else:
-            if '-v' in args:
-                is_v = True
+        if '-v' in args:
+            is_v = True
 
-            if '-o' in args:
-                o_index = args.index('-o')
-                o_path = args[o_index+1]
+        if '-o' in args:
+            o_index = args.index('-o')
+            o_path = args[o_index+1]
 
-            if '-h' in args:
-                h_index = 0
-                for i in args:
-                    if i == '-h':
-                        header = args[h_index+1].split(':')
-                        headers[header[0]] = header[1]
-                    h_index+=1
+        if '-h' in args:
+            h_index = 0
+            for i in args:
+                if i == '-h':
+                    header = args[h_index+1].split(':')
+                    headers[header[0]] = header[1]
+                h_index+=1
+        
+        if '-d' in args:
+            d_index = args.index('-d')
+            data = args[d_index+1]
 
-            if '-d' in args:
-                d_index = args.index('-d')
-                data = args[d_index+1]
+        if '-f' in args:
+            f_index = args.index('-f')
+            file_path = args[f_index+1]
 
-            if '-f' in args:
-                f_index = args.index('-f')
-                file_path = args[f_index+1]
-
-            post(url,headers,is_v,data,file_path,o_path)
+        post(url,headers,is_v,data,file_path,o_path)
 
 
 
@@ -104,3 +99,4 @@ class Httpc (cmd.Cmd):
 
 if __name__ == '__main__':
     Httpc().cmdloop()
+

@@ -32,6 +32,7 @@ def get(url,headers,is_v,o_path):
 
 			if len(o_path)>0:
 				output_2_file(o_path,resp_content)
+				break
 			else:
 				if not is_v:
 					sys.stdout.write(resp_content)
@@ -85,6 +86,7 @@ def post(url,headers,is_v,data,file,o_path):
 
 			if len(o_path)>0:
 				output_2_file(o_path,resp_content)
+				break
 			else:
 				if not is_v:
 					sys.stdout.write(resp_content)
