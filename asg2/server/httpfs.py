@@ -1,30 +1,27 @@
 import cmd
-from server.httplib.server import runserver
-
+from httplib.server import runserver
 
 class Httpfs(cmd.Cmd):
-    prompt = 'httpfs '
+    prompt = ''
 
-    def do_get(self, arg):
+    def do_httpfs(self, arg):
         args = arg.split(' ')
         is_v = False
-        p_path = 8080
-        d_path = './'
-
-        url = args[-1]
+        port = 8080
+        dir_path = '../server'
 
         if '-v' in args:
             is_v = True
 
         if '-p' in args:
             p_index = args.index('-p')
-            p_path = args[p_index+1]
+            port = args[p_index + 1]
 
         if '-d' in args:
             d_index = args.index('-d')
-            d_path = args[d_index+1]
+            dir_path = args[d_index + 1]
 
-        runserver('127.0.0.1', p_path)
+        runserver(port, is_v, dir_path)
 
     def do_exit(self, arg):
         return True
@@ -32,4 +29,3 @@ class Httpfs(cmd.Cmd):
 
 if __name__ == '__main__':
     Httpfs().cmdloop()
-
