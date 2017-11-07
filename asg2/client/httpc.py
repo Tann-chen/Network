@@ -1,6 +1,8 @@
 import cmd
+import threading
 from httplib.httplib import get
 from httplib.httplib import post
+from httpcobj.httpcobj import HttpObj
 
 
 class Httpc(cmd.Cmd):
@@ -89,8 +91,29 @@ class Httpc(cmd.Cmd):
 
         post(url, headers, is_v, data, file_path, o_path)
 
+    def do_manyhttpc(self, arg):
+        num_httpc = int(arg)
+        httpcs_lst = []
+        for i in range(num_httpc):
+            temp = HttpObj(i)
+            httpcs_lst.append(temp)
+
+        for http_obj in httpcs_lst:
+            if http_obj.id % 2 == 0:
+                threading.Thread(target=handler_get, args=(http_obj,)).start()
+            else:
+                threading.Thread(target=handler_post, args=(http_obj,)).start()
+
     def do_exit(self, arg):
         return True
+
+
+def handler_get(httpc_obj):
+    httpc_obj.do_get("get -v /file.json")
+
+
+def handler_post(httpc_obj):
+    httpc_obj.do_get("post -d {content:1} /file.json")
 
 
 if __name__ == '__main__':

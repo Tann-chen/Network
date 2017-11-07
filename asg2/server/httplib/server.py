@@ -1,7 +1,5 @@
 import socket
-import datetime
 import threading
-import time
 from fileapp.fileapp import FileApp
 
 
@@ -22,12 +20,12 @@ def status_phrase_maping(status):
 
 def runserver(port, is_v, dir_path):
     print('server is running ...')
-    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   # welcome socket
     try:
-        listener.bind(('localhost', port))
+        listener.bind(('localhost', port))   
         listener.listen(5)
         while True:
-            conn, addr = listener.accept()
+            conn, addr = listener.accept()  # create a new socket to connet with client
             threading.Thread(target=handler, args=(conn, is_v, dir_path)).start()
     except Exception as e:
         if is_v:
@@ -84,9 +82,9 @@ def handler(conn, is_v, dir_path):
         elif reqst_method == 'POST':
             fileapp = FileApp()
             file_name = reqst_url[1:]
-            if is_v:
-                print('write_to:' + file_name)
-            fileapp.post_content(file_name, body_content)
+            fileapp.post_content(dir_path, file_name, body_content)
+            if -is_v:
+                print('*body-content:'+body_content)
             status = fileapp.status
             content = fileapp.content
             content_type = fileapp.content_type

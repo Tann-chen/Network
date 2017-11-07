@@ -5,8 +5,8 @@ from urllib.parse import urlparse
 
 def get(url, headers, is_v, o_path):
     url_parse = urlparse(url)
-    # host_name = url_parse.netloc
-    host_name = 'localhost'
+    host_name = url_parse.netloc
+    # host_name = 'localhost'
     parameters = url_parse.query
     path = url_parse.path
 
@@ -49,8 +49,8 @@ def get(url, headers, is_v, o_path):
 
 def post(url, headers, is_v, data, file, o_path):
     url_parse = urlparse(url)
-    # host_name = url_parse.netloc
-    host_name = 'localhost'
+    host_name = url_parse.netloc
+    # host_name = 'localhost'
     parameters = url_parse.query
     path = url_parse.path
 

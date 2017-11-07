@@ -1,8 +1,11 @@
 import os
 import json
+import threading
 
 
 class FileApp:
+    lock = threading.Lock()
+
     def __init__(self):
         self.status = 400
         self.content_type = 'text/plain'
@@ -21,26 +24,44 @@ class FileApp:
         self.content_type = 'application/json'
 
     def get_content(self, dir_url, file_name):
-        files = FileApp.files_list_in_dir(dir_url)
-        if file_name not in files:
+        if file_name.find('../') != -1:
             output = {}
-            output['error'] = 404
-            output['message'] = 'Not found'
-            self.status = 404
+            output['warning'] = 400
+            output['message'] = 'Bad Request - Can not access to outer dictionary'
+            self.status = 400
             self.content = json.dumps(output)
             self.content_type = 'application/json'
         else:
-            with open(dir_url + '/' + file_name, 'r', errors="ignore") as file_obj:
-                content = file_obj.read()
-            self.status = 200
-            self.content = content
-            self.content_type = FileApp.get_content_type(file_name)
+            files = FileApp.files_list_in_dir(dir_url)
+            if file_name not in files:
+                output = {}
+                output['error'] = 404
+                output['message'] = 'Not found'
+                self.status = 404
+                self.content = json.dumps(output)
+                self.content_type = 'application/json'
+            else:
+                FileApp.lock.acquire()
+                try:
+                    with open(dir_url + '/' + file_name, 'r', errors="ignore") as file_obj:
+                        content = file_obj.read()
+                finally:
+                    FileApp.lock.release()
 
-    def post_content(self, file_name, content):
-        with open(file_name, 'w') as f:
-            f.write(content)
+                self.status = 200
+                self.content = content
+                self.content_type = FileApp.get_content_type(file_name)
+
+    def post_content(self, dir_url, file_name, content):
+        FileApp.lock.acquire()
+        try:
+            with open(dir_url + '/' + file_name, 'w') as f:
+                f.write(content)
+        finally:
+            FileApp.lock.release()
+
         self.status = 200
-        self.content = 'write in to ' + file_name
+        self.content = 'write in to ' + dir_url + '/' + file_name
         self.content_type = 'text/plain'
 
     @staticmethod

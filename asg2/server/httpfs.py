@@ -1,6 +1,7 @@
 import cmd
 from httplib.server import runserver
 
+
 class Httpfs(cmd.Cmd):
     prompt = ''
 
